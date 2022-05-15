@@ -38,7 +38,7 @@ const HomeScreen = () => {
         <View style={styles.searchInputSection}>
           <TextInput
             placeholder="Search for medical..."
-            selectTextOnFocus="true"
+            // selectTextOnFocus='true'
           ></TextInput>
         </View>
         <View style={styles.filterIcon}>
@@ -201,9 +201,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#D6F6FF",
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
+    margin: 15,
     borderRadius: 20,
     flexDirection: "row",
+    shadowOpacity:0.05,
   },
   statusSection: {
     flex: 2.5,
@@ -251,6 +252,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
+    shadowOpacity:0.05,
   },
   serviceHeaderTextContainer: {
     flex: 2,
@@ -312,6 +314,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 10,
     margin: 10,
+    shadowOpacity:0.05,
   },
   CommentSection: {
     flex: 6,
@@ -323,6 +326,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 10,
     margin: 10,
+    shadowOpacity:0.05,
   },
   statusHeaderTextContainer: {
     flex: 2,
@@ -352,11 +356,11 @@ const styles = StyleSheet.create({
   BMIText: {
     flex: 6,
     fontSize: 25,
-    color: "white",
+    color: "black",
     fontWeight: "600",
   },
     BMITextContainer: {},
     commentIcon: {flex: 2,height:'100%', alignItems: "flex-start", justifyContent: "center", marginTop: 10, width: "70%", elevation: 10},
-    commentText: {fontSize:15, color: "white", fontWeight: "600" ,textAlign:'center'},
+    commentText: {fontSize:15, color: "black", fontWeight: "600" ,textAlign:'center'},
     commentTextContainer: {flex: 8, alignItems: "center", justifyContent: "center"},
 });
