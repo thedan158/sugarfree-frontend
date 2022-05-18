@@ -245,16 +245,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   mealImage: { width: "100%", height: "100%", borderRadius: 20 },
-  CardBodyText1: { color: "#0C1115", fontSize: 15, fontWeight: "300" },
+  CardBodyText1: { color: "#fff", fontSize: 15, fontWeight: "300" },
   CardBodyText2: {
-    color: "#0E1012",
+    color: "#fff",
     fontSize: 20,
     fontWeight: "500",
     marginTop: 5,
   },
   lunchCard: {
     flex: 8,
-    backgroundColor: "#F1E6EA",
+    backgroundColor: "#0AA1DD",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   },
   dinnerCard: {
     flex: 8,
-    backgroundColor: "#FAF0DB",
+    backgroundColor: "#79DAE8",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
