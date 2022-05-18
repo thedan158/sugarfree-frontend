@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  Modal,
 } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { useNavigation } from "@react-navigation/native";
 const HomeScreen = () => {
+  const navigation = useNavigation();
   return (
     //   Welcome to SugarFree!
     <SafeAreaView style={styles.container}>
@@ -21,12 +23,12 @@ const HomeScreen = () => {
           <Text style={styles.headerText}>👋 Hello!</Text>
           <Text style={styles.headerUsername}>Dan Nguyen</Text>
         </View>
-        <View style={styles.headerUserSection}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Profile')} style={styles.headerUserSection}>
           <Image
             style={styles.headerUserImage}
             source={require("../assets/images/user.jpg")}
           />
-        </View>
+        </TouchableOpacity>
       </View>
       {/* End Section */}
 
@@ -89,7 +91,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.serviceButton} backgroundColor="#F2E3E9">
-            <TouchableOpacity style={styles.serviceButton}>
+            <TouchableOpacity onPress={()=>navigation.navigate('Meal')} style={styles.serviceButton}>
               <View style={styles.buttonIcon}>
                 <MaterialCommunityIcons
                   name="food-apple-outline"

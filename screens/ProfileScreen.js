@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeaderContainer}>
@@ -57,7 +59,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.profileFooterContainer}>
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} onPress={()=>navigation.navigate('Login')}>
           <MaterialCommunityIcons
             name="logout"
             size={20}

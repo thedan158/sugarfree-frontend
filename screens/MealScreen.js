@@ -28,54 +28,56 @@ const MealScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.scheduleFooterContainer}>
-          <ScrollView
-            horizontal="true"
-            flexDirection="row"
-            contentContainerStyle={styles.calendarScrollView}
-          >
-            <View style={styles.calendarButton}>
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonthSelected}>12</Text>
-                <Text style={styles.dateInWeekSelected}>Tue</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonth}>13</Text>
-                <Text style={styles.dateInWeek}>Wed</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonth}>14</Text>
-                <Text style={styles.dateInWeek}>Thu</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonth}>15</Text>
-                <Text style={styles.dateInWeek}>Fri</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonth}>16</Text>
-                <Text style={styles.dateInWeek}>Sat</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonth}>17</Text>
-                <Text style={styles.dateInWeek}>Sun</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-              <TouchableOpacity style={styles.dateContainer}>
-                <Text style={styles.dateInMonth}>18</Text>
-                <Text style={styles.dateInWeek}>Mon</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
+          <View style={{ flex: 1 }}>
+            <ScrollView
+              horizontal="true"
+              flexDirection="row"
+              contentContainerStyle={styles.calendarScrollView}
+            >
+              <View style={styles.calendarButton}>
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonthSelected}>12</Text>
+                  <Text style={styles.dateInWeekSelected}>Tue</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonth}>13</Text>
+                  <Text style={styles.dateInWeek}>Wed</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonth}>14</Text>
+                  <Text style={styles.dateInWeek}>Thu</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonth}>15</Text>
+                  <Text style={styles.dateInWeek}>Fri</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonth}>16</Text>
+                  <Text style={styles.dateInWeek}>Sat</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonth}>17</Text>
+                  <Text style={styles.dateInWeek}>Sun</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
+                <TouchableOpacity style={styles.dateContainer}>
+                  <Text style={styles.dateInMonth}>18</Text>
+                  <Text style={styles.dateInWeek}>Mon</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
         </View>
       </View>
       {/* End Section */}
@@ -193,8 +195,6 @@ const styles = StyleSheet.create({
   calendarScrollView: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
   },
   dateContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
   dateInMonth: { fontSize: 20, fontWeight: "500" },
