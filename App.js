@@ -11,6 +11,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SignupScreen from "./screens/SignupScreen";
+import PillScreen from "./screens/PillScreen";
+import ReportScreen from "./screens/ReportScreen";
+import OtpScreen from "./screens/OtpScreen";
+import OnBoardingScreen from "./screens/OnBoardingScreen";
+import SplashScreen from "./screens/SplashScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,9 +57,9 @@ function HomeTabScreen() {
         options={{
           tabBarBadge: 2,
           headerShown: false,
-          tabBarLabel: "Chatroom",
+          tabBarLabel: "Doctor Connect",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="chat" color={color} size={size} />
+            <MaterialCommunityIcons name="doctor" color={color} size={size} />
           ),
         }}
         name="Chatroom"
@@ -77,10 +82,64 @@ function HomeTabScreen() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" options={{headerShown: false}} component={LoginScreen} />
-        <Stack.Screen name="HomeTab" options={{headerShown: false}} component={HomeTabScreen}/>
-        <Stack.Screen name="Signup" options={{headerShown: false}} component={SignupScreen} />
+      <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen
+        name="Splash"
+        component={SplashScreen}
+        options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          options={{ headerShown: false }}
+          component={LoginScreen}
+        />
+        <Stack.Screen
+          name="HomeTab"
+          options={{ headerShown: false }}
+          component={HomeTabScreen}
+        />
+        <Stack.Screen
+          name="Signup"
+          options={{ headerShown: false }}
+          component={SignupScreen}
+        />
+        <Stack.Screen
+          name="Pill"
+          options={{
+            headerStyle: {
+              backgroundColor: "#009DC7",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+          component={PillScreen}
+        />
+        <Stack.Screen
+          name="Report"
+          options={{
+            headerStyle: {
+              backgroundColor: "#009DC7",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+          component={ReportScreen}
+        />
+        <Stack.Screen 
+        name="Otp"
+        component={OtpScreen}
+        options={{ headerShown: false }}
+        />
+        <Stack.Screen
+        name="OnBoarding"
+        component={OnBoardingScreen}
+        options={{ headerShown: false }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

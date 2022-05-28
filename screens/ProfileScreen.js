@@ -33,33 +33,36 @@ const ProfileScreen = () => {
           />
           <Text style={styles.profileButtonText}>Edit Profile</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.profileButton}>
-        <MaterialCommunityIcons
-            name="cog-outline"
-            size={25}
-            color={"#fff"}
-          />
-          <Text style={styles.profileButtonText}>Account Settings</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.profileButton}>
-        <MaterialCommunityIcons
+          <MaterialCommunityIcons
             name="information-variant"
             size={25}
             color={"#fff"}
           />
           <Text style={styles.profileButtonText}>Privacy Policy</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profileButton}>
-        <MaterialCommunityIcons
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Report")}
+          style={styles.profileButton}
+        >
+          <MaterialCommunityIcons
             name="clipboard-pulse-outline"
             size={25}
             color={"#fff"}
           />
           <Text style={styles.profileButtonText}>Health Report</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.profileButton}>
+          <MaterialCommunityIcons name="cog-outline" size={25} color={"#fff"} />
+          <Text style={styles.profileButtonText}>Change Password</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.profileFooterContainer}>
-        <TouchableOpacity style={styles.logoutButton} onPress={()=>navigation.navigate('Login')}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate("Login")}
+        >
           <MaterialCommunityIcons
             name="logout"
             size={20}
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
-    color: 'black',
+    color: "black",
   },
   profileRole: { fontSize: 15, marginTop: 10, color: "black" },
   profileImage: { width: 70, height: 70, borderRadius: 25 },
@@ -132,5 +135,10 @@ const styles = StyleSheet.create({
     color: "#1C6BA4",
     marginLeft: 5,
   },
-  profileButtonText: {marginLeft:20, fontSize: 17, fontWeight: "500", color: "#fff"},
+  profileButtonText: {
+    marginLeft: 20,
+    fontSize: 17,
+    fontWeight: "500",
+    color: "#fff",
+  },
 });

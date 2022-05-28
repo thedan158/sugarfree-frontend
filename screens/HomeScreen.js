@@ -11,6 +11,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
+import IconBadge from "react-native-icon-badge";
 import React, { useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -38,9 +39,18 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate("Profile")}
           style={styles.headerUserSection}
         >
-          <Image
-            style={styles.headerUserImage}
-            source={require("../assets/images/user.jpg")}
+          <IconBadge
+            MainElement={
+              <Image
+                style={styles.headerUserImage}
+                source={require("../assets/images/user.jpg")}
+              />
+            }
+            IconBadgeStyle={{
+              width: 10,
+              height: 18,
+              backgroundColor: "#009DC7",
+            }}
           />
         </TouchableOpacity>
       </View>
@@ -76,7 +86,10 @@ const HomeScreen = () => {
         </View>
         <View style={styles.serviceButtonContainer}>
           <View style={styles.serviceButton} backgroundColor="#DCEDF9">
-            <TouchableOpacity style={styles.serviceButton}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Chatroom")}
+              style={styles.serviceButton}
+            >
               <View style={styles.buttonIcon}>
                 <MaterialCommunityIcons
                   name="doctor"
@@ -87,14 +100,20 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.serviceButton} backgroundColor="#FAF0DB">
-            <TouchableOpacity style={styles.serviceButton}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Pill")}
+              style={styles.serviceButton}
+            >
               <View style={styles.buttonIcon}>
                 <MaterialCommunityIcons name="pill" size={40} color="#E09F1F" />
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.serviceButton} backgroundColor="#D6F6FF">
-            <TouchableOpacity style={styles.serviceButton}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Report")}
+              style={styles.serviceButton}
+            >
               <View style={styles.buttonIcon}>
                 <MaterialCommunityIcons
                   name="clipboard-pulse-outline"
@@ -356,7 +375,8 @@ const styles = StyleSheet.create({
   headerUserSection: {
     flex: 3,
     alignItems: "flex-end",
-    justifyContent: "center",
+    justifyContent: "flex-end",
+    flexDirection: "row",
   },
   headerUserImage: { width: 50, height: 50, borderRadius: 20, marginTop: 5 },
   serviceHeaderText: {

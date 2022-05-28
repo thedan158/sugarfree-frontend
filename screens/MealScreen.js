@@ -12,6 +12,25 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 
 const MealScreen = () => {
+  const currentDate = new Date().getDate();
+  const weekday = [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+  ];
+  const currentDayinNumber = new Date().getDay();
+  const currentDay = weekday[new Date().getDay()];
   return (
     //Welcome To Meal Screen
     <SafeAreaView style={styles.container}>
@@ -36,44 +55,48 @@ const MealScreen = () => {
             >
               <View style={styles.calendarButton}>
                 <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonthSelected}>12</Text>
-                  <Text style={styles.dateInWeekSelected}>Tue</Text>
+                  <Text style={styles.dateInMonthSelected}>{currentDate}</Text>
+                  <Text style={styles.dateInWeekSelected}>{currentDay}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.calendarButton} backgroundColor="#DCEDF9">
                 <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonth}>13</Text>
-                  <Text style={styles.dateInWeek}>Wed</Text>
+                  <Text style={styles.dateInMonth}>{currentDate + 1}</Text>
+                  <Text style={styles.dateInWeek}>
+                    {weekday[currentDayinNumber + 1]}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.calendarButton} backgroundColor="#DCEDF9">
                 <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonth}>14</Text>
-                  <Text style={styles.dateInWeek}>Thu</Text>
+                  <Text style={styles.dateInMonth}>{currentDate + 2}</Text>
+                  <Text style={styles.dateInWeek}>
+                    {weekday[currentDayinNumber + 2]}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.calendarButton} backgroundColor="#DCEDF9">
                 <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonth}>15</Text>
-                  <Text style={styles.dateInWeek}>Fri</Text>
+                  <Text style={styles.dateInMonth}>{currentDate + 3}</Text>
+                  <Text style={styles.dateInWeek}>
+                    {weekday[currentDayinNumber + 3]}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.calendarButton} backgroundColor="#DCEDF9">
                 <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonth}>16</Text>
-                  <Text style={styles.dateInWeek}>Sat</Text>
+                  <Text style={styles.dateInMonth}>{currentDate + 4}</Text>
+                  <Text style={styles.dateInWeek}>
+                    {weekday[currentDayinNumber + 4]}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.calendarButton} backgroundColor="#DCEDF9">
                 <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonth}>17</Text>
-                  <Text style={styles.dateInWeek}>Sun</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.calendarButton} backgroundColor="#DCEDF9">
-                <TouchableOpacity style={styles.dateContainer}>
-                  <Text style={styles.dateInMonth}>18</Text>
-                  <Text style={styles.dateInWeek}>Mon</Text>
+                  <Text style={styles.dateInMonth}>{currentDate + 5}</Text>
+                  <Text style={styles.dateInWeek}>
+                    {weekday[currentDayinNumber + 5]}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>

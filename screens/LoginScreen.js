@@ -99,19 +99,19 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
   loginHeaderContainer: {
-    flex: 3,
+    flex: 4,
     backgroundColor: "#22d5d4",
     alignItems: "center",
     justifyContent: "flex-end",
     borderBottomEndRadius: 500,
   },
   loginBodyContainer: {
-    flex: 2,
+    flex: 1.5,
     backgroundColor: "#fff",
     alignItems: "center",
   },
   loginFooterContainer: {
-    flex: 5,
+    flex: 5.5,
     backgroundColor: "#22d5d4",
     alignItems: "center",
     borderTopLeftRadius: 500,
