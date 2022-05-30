@@ -5,11 +5,14 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  Alert
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import CustomTextInput from "../components/CustomTextInput";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -17,8 +20,30 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [isSecureEntry, setIsSecureEntry] = useState(true);
   const [visible, setVisible] = React.useState(false);
-  const handleLogin = () => {
-    navigation.navigate("HomeTab");
+  const handleLogin = async() => {
+    console.log('Login');
+    const data = {
+      username: username,
+      password: password
+    }
+    console.log(data);
+    // Passing configuration object to axios
+    const res = await axios.post(
+      `https://d8ab-125-235-210-33.ap.ngrok.io/auth/login`,
+      {
+        username: username,
+        password: password,
+      }
+    );
+
+    const { success } = res.data;
+    console.log(success);
+    if (success) {
+      await AsyncStorage.setItem("userInfo", JSON.stringify(data));
+      navigation.navigate("HomeTab");
+    } else {
+      Alert.alert("Login failed");
+    }
   };
   return (
     <SafeAreaView style={styles.container}>

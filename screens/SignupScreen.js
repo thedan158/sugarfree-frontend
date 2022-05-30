@@ -11,14 +11,39 @@ import React, { useState } from "react";
 import CustomTextInput from "../components/CustomTextInput";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignupScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isSecureEntry, setIsSecureEntry] = useState(true);
   const [visible, setVisible] = React.useState(false);
   const navigation = useNavigation();
+  const handleSignup = async () => {
+    console.log("Signup");
+    const data = {
+      username: username,
+      password: password,
+      phoneNumber: phoneNumber,
+      fullname: fullname,
+    };
+    const res = await axios.post(
+      `https://d8ab-125-235-210-33.ap.ngrok.io/otp/sendOtp`,
+      { phoneNumber: "+84" + phoneNumber.substring(1) }
+    );
+    const { success } = res.data;
+    console.log(success);
+    if (success) {
+      await AsyncStorage.setItem("SignupInfo", JSON.stringify(data));
+      navigation.navigate("Otp");
+    } else {
+      Alert.alert("Signup failed");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.signupHeaderContainer}>
@@ -30,49 +55,48 @@ const SignupScreen = () => {
       </View>
       <View style={styles.signupBodyContainer}>
         <Text style={styles.signupHeader2}>SIGN UP</Text>
-        <View style={{flex:1}}>
-        <ScrollView contentContainerStyle={styles.inputScrollView}>
-          <CustomTextInput
-            placeholder="Fullname"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-          />
-          <CustomTextInput
-            placeholder="Username"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-          />
-          <CustomTextInput
-            placeholder="Phone Number"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-          />
-          <CustomTextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={isSecureEntry}
-            icon={
-              <TouchableOpacity
-                onPress={() => {
-                  setIsSecureEntry((prev) => !prev);
-                }}
-              >
-                <MaterialCommunityIcons
-                  name={isSecureEntry ? "eye-off-outline" : "eye-outline"}
-                  size={25}
-                  color="#22d5d4"
-                />
-              </TouchableOpacity>
-            }
-            iconPosition="right"
-          />
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+          <ScrollView contentContainerStyle={styles.inputScrollView}>
+            <CustomTextInput
+              placeholder="Fullname"
+              value={fullname}
+              onChangeText={(text) => setFullname(text)}
+            />
+            <CustomTextInput
+              placeholder="Username"
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+            />
+            <CustomTextInput
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChangeText={(text) => setPhoneNumber(text)}
+            />
+            <CustomTextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={isSecureEntry}
+              icon={
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsSecureEntry((prev) => !prev);
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name={isSecureEntry ? "eye-off-outline" : "eye-outline"}
+                    size={25}
+                    color="#22d5d4"
+                  />
+                </TouchableOpacity>
+              }
+              iconPosition="right"
+            />
+          </ScrollView>
         </View>
-        
       </View>
       <View style={styles.signupFooterContainer}>
-        <TouchableOpacity onPress={()=>navigation.navigate('Otp')} style={styles.buttonSignup}>
+        <TouchableOpacity onPress={handleSignup} style={styles.buttonSignup}>
           <Text style={styles.buttonSignupText}>SIGN UP</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -133,5 +157,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonLoginText: { fontSize: 20, color: "white", fontWeight: "bold" },
-    inputScrollView: {backgroundColor: "#fff", margin: 10},
+  inputScrollView: { backgroundColor: "#fff", margin: 10 },
 });

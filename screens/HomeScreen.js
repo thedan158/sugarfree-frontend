@@ -12,19 +12,116 @@ import {
   Pressable,
 } from "react-native";
 import IconBadge from "react-native-icon-badge";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [BMI, setBMI] = useState("");
+  const [username, setUsername] = useState("");
+  const [BMIComment, setBMIComment] = useState("");
+  const [SugarComment, setSugarComment] = useState("");
+  const [userSugarlvl, setuserSugarlvl] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [sugarlevel, setSugarlevel] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalBMIVisible, setModalBMIVisible] = useState(false);
-  const handleSugarate = () => {
+
+  //*Region Handle Data
+  useEffect(() => {
+    const handleData = async () => {
+      const userInfo = await AsyncStorage.getItem("userInfo");
+      const user = JSON.parse(userInfo);
+      setUsername(user.username);
+      console.log(username);
+      const res = await axios.post(
+        `https://d8ab-125-235-210-33.ap.ngrok.io/report/getTodayReport`,
+        {
+          username: username,
+        }
+      );
+      const { success, message } = res.data;
+      console.log(success);
+      console.log(message);
+      if (success) {
+        setBMI(message.BMI);
+        if (message.BMI < 18.5) {
+          setBMIComment("Underweight");
+        }
+        if (message.BMI >= 18.5 && message.BMI <= 24.9) {
+          setBMIComment("Normal");
+        }
+        if (message.BMI >= 25) {
+          setBMIComment("Overweight");
+        }
+        setSugarlevel(message.sugarLevel);
+        if (message.sugarLevel < 140 && message.sugarLevel > 70) {
+          setuserSugarlvl(true);
+          setSugarComment("Normal");
+        } else {
+          setuserSugarlvl(false);
+          setSugarComment("Bad");
+        }
+      }
+    };
+    handleData().catch((err) => console.log(err));
+  }, [username]);
+  //*End Region Handle Data
+
+  //*Region Handle Sugar Levels
+  const handleSugarate = async () => {
+    if (sugarlevel < 140 && sugarlevel > 70) {
+      setuserSugarlvl(true);
+      setSugarComment("Normal");
+    } else {
+      setuserSugarlvl(false);
+      setSugarComment("Bad");
+    }
+    console.log(username);
+    const res = await axios.post(
+      `https://d8ab-125-235-210-33.ap.ngrok.io/report/saveSugarlvl`,
+      {
+        username: username,
+        sugarLevel: sugarlevel,
+      }
+    );
+    const { success } = res.data;
+    console.log(success);
     setModalVisible(!modalVisible);
   };
-  const handleBMI = () => {
+  //*End Region Handle Sugar Levels
+
+  //*Region Handle BMI
+  const handleBMI = async () => {
+    const newBMI = Math.round((weight / (height / 100) ** 2) * 100) / 100;
+    setBMI(newBMI);
+    if (newBMI < 18.5) {
+      setBMIComment("Underweight");
+    }
+    if (newBMI >= 18.5 && newBMI <= 24.9) {
+      setBMIComment("Normal");
+    }
+    if (newBMI >= 25) {
+      setBMIComment("Overweight");
+    }
+    const res = await axios.post(
+      `https://d8ab-125-235-210-33.ap.ngrok.io/report/saveBMI`,
+      {
+        username: username,
+        BMI: newBMI,
+      }
+    );
+    const { success } = res.data;
+    console.log(success);
     setModalBMIVisible(!modalBMIVisible);
   };
+  //*End Region Handle BMI
+
   return (
     //   Welcome to SugarFree!
     <SafeAreaView style={styles.container}>
@@ -33,7 +130,7 @@ const HomeScreen = () => {
       <View style={styles.headerSection}>
         <View style={styles.headerTextSection}>
           <Text style={styles.headerText}>👋 Hello!</Text>
-          <Text style={styles.headerUsername}>Dan Nguyen</Text>
+          <Text style={styles.headerUsername}>{username}</Text>
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("Profile")}
@@ -143,9 +240,15 @@ const HomeScreen = () => {
 
       {/* Blood Sugar Section */}
       <View style={styles.cardSection}>
-        <View style={styles.sugarRateContainer}>
+        <View
+          style={
+            !userSugarlvl
+              ? styles.sugarRateContainerWarning
+              : styles.sugarRateContainer
+          }
+        >
           <MaterialCommunityIcons
-            name="check-bold"
+            name={!userSugarlvl ? "alpha-x-circle" : "check-bold"}
             color="#fff"
             size={50}
           ></MaterialCommunityIcons>
@@ -190,7 +293,7 @@ const HomeScreen = () => {
               size={15}
               color={"#9D4C6C"}
             />
-            <Text style={styles.BMIText}>19</Text>
+            <Text style={styles.BMIText}>{BMI}</Text>
           </View>
           <View style={styles.CommentSection}>
             <MaterialCommunityIcons
@@ -200,8 +303,8 @@ const HomeScreen = () => {
               color={"#1C6BA4"}
             />
             <View style={styles.commentTextContainer}>
-              <Text style={styles.commentText}>Good BMI</Text>
-              <Text style={styles.commentText}>Good Sugar Rate</Text>
+              <Text style={styles.commentText}>{BMIComment} BMI</Text>
+              <Text style={styles.commentText}>{SugarComment} Sugar Rate</Text>
             </View>
           </View>
         </View>
@@ -227,8 +330,8 @@ const HomeScreen = () => {
               style={styles.sugarateInput}
               keyboardType="numeric"
               placeholder="Enter sugarate..."
-              // onChangeText={(text) => this.onChanged(text)}
-              // value={this.state.myNumber}
+              onChangeText={(text) => setSugarlevel(text)}
+              value={sugarlevel}
               maxLength={5} //setting limit of input
             />
             <View style={styles.modalButtonContainer}>
@@ -268,16 +371,16 @@ const HomeScreen = () => {
                 style={styles.measureInput}
                 keyboardType="numeric"
                 placeholder="Enter Weight..."
-                // onChangeText={(text) => this.onChanged(text)}
-                // value={this.state.myNumber}
+                onChangeText={(text) => setWeight(text)}
+                value={weight}
                 maxLength={3} //setting limit of input
               />
               <TextInput
                 style={[styles.measureInput, { marginLeft: 15 }]}
                 keyboardType="numeric"
                 placeholder="Enter Height..."
-                // onChangeText={(text) => this.onChanged(text)}
-                // value={this.state.myNumber}
+                onChangeText={(text) => setHeight(text)}
+                value={height}
                 maxLength={3} //setting limit of input
               />
             </View>
@@ -368,9 +471,9 @@ const styles = StyleSheet.create({
   },
   headerUsername: {
     fontSize: 25,
-    fontWeight: "600",
-    color: "#000",
-    marginTop: 10,
+    fontWeight: "bold",
+    color: "#009DC7",
+    marginTop: 5,
   },
   headerUserSection: {
     flex: 3,
@@ -399,7 +502,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.1,
   },
   serviceHeaderTextContainer: {
     flex: 2,
@@ -421,6 +524,17 @@ const styles = StyleSheet.create({
     width: "40%",
     height: "80%",
     backgroundColor: "#6BCB77",
+    borderRadius: 20,
+    elevation: 10,
+    margin: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sugarRateContainerWarning: {
+    flex: 4,
+    width: "40%",
+    height: "80%",
+    backgroundColor: "#F24C4C",
     borderRadius: 20,
     elevation: 10,
     margin: 15,

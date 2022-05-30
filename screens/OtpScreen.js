@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from "../assets/images/logo.png";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -46,39 +47,39 @@ const OTP = () => {
   }, []);
 
   const handleOTP = async () => {
-      navigation.navigate("HomeTab");
-  //   const userInfo = await AsyncStorage.getItem("userInfo");
-  //   const user = JSON.parse(userInfo);
-  //   console.log("+84" + user.phoneNumber.substring(1));
-  //   const res = await axios.post(
-  //     `https://foody-uit.herokuapp.com/otp/verifyOtp`,
-  //     {
-  //       phoneNumber: "+84" + user.phoneNumber.substring(1),
-  //       otp: internalVal,
-  //     }
-  //   );
-  //   const { success } = res.data;
-  //   console.log(success);
+      
+    const userInfo = await AsyncStorage.getItem("SignupInfo");
+    const user = JSON.parse(userInfo);
+    console.log("+84" + user.phoneNumber.substring(1));
+    const res = await axios.post(
+      `https://d8ab-125-235-210-33.ap.ngrok.io/otp/verifyOtp`,
+      {
+        phoneNumber: "+84" + user.phoneNumber.substring(1),
+        otp: internalVal,
+      }
+    );
+    const { success } = res.data;
+    console.log(success);
 
-  //   if (success) {
-  //     try {
-  //         console.log(user.fullname);
-  //       const resSignup = await axios.post(`https://foody-uit.herokuapp.com/auth/register`, {
-  //         fullname: user.fullname,
-  //         phoneNumber: user.phoneNumber,
-  //         password: user.password,
-  //         username: user.username,
-  //       });
-  //       const { success } = resSignup.data;
-  //       console.log(success);
-  //       navigation.navigate("RestaurantInformation");
-  //     } catch (error) {
-  //       console.log(error);
-  //       Alert.alert("Error", "Something went wrong");
-  //     }
-  //   } else {
-  //     Alert.alert("Wrong OTP");
-  //   }
+    if (success) {
+      try {
+          console.log(user.fullname);
+        const resSignup = await axios.post(`https://d8ab-125-235-210-33.ap.ngrok.io/auth/register`, {
+          fullname: user.fullname,
+          phoneNumber: user.phoneNumber,
+          password: user.password,
+          username: user.username,
+        });
+        const { success } = resSignup.data;
+        console.log(success);
+        navigation.navigate("Login");
+      } catch (error) {
+        console.log(error);
+        Alert.alert("Error", "Something went wrong");
+      }
+    } else {
+      Alert.alert("Wrong OTP");
+    }
   };
 
   return (

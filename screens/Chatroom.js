@@ -195,12 +195,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    resizeMode: "contain",
+    width: 100,
+    height:100,
     padding: "2%",
   },
   containerInfoItem: {
     flex: 7.5,
-    marginLeft: "3%",
+    marginLeft: "10%",
   },
   containeremailItem: {
     flex: 2,
@@ -244,7 +245,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   imgSourceItem: {
-    resizeMode: "contain",
     margin: "2%",
     borderRadius: 15,
     height: 100,
