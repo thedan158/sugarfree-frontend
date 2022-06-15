@@ -24,7 +24,7 @@ const ReportScreen = () => {
       const user = JSON.parse(userInfo);
       console.log(user.username);
       const res = await axios.post(
-        "https://d8ab-125-235-210-33.ap.ngrok.io/report/getAllReport",
+        "https://30e6-42-116-226-110.ap.ngrok.io/report/getAllReport",
         {
           username: user.username,
         }

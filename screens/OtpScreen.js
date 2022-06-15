@@ -52,7 +52,7 @@ const OTP = () => {
     const user = JSON.parse(userInfo);
     console.log("+84" + user.phoneNumber.substring(1));
     const res = await axios.post(
-      `https://d8ab-125-235-210-33.ap.ngrok.io/otp/verifyOtp`,
+      `https://30e6-42-116-226-110.ap.ngrok.io/otp/verifyOtp`,
       {
         phoneNumber: "+84" + user.phoneNumber.substring(1),
         otp: internalVal,
@@ -64,7 +64,7 @@ const OTP = () => {
     if (success) {
       try {
           console.log(user.fullname);
-        const resSignup = await axios.post(`https://d8ab-125-235-210-33.ap.ngrok.io/auth/register`, {
+        const resSignup = await axios.post(`https://30e6-42-116-226-110.ap.ngrok.io/auth/register`, {
           fullname: user.fullname,
           phoneNumber: user.phoneNumber,
           password: user.password,

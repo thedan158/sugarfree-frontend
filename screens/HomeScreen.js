@@ -14,7 +14,7 @@ import {
 import IconBadge from "react-native-icon-badge";
 import React, { useState, useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,6 +31,7 @@ const HomeScreen = () => {
   const [sugarlevel, setSugarlevel] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalBMIVisible, setModalBMIVisible] = useState(false);
+  const [image, setImage] = useState("");
 
   //*Region Handle Data
   useEffect(() => {
@@ -40,7 +41,7 @@ const HomeScreen = () => {
       setUsername(user.username);
       console.log(username);
       const res = await axios.post(
-        `https://d8ab-125-235-210-33.ap.ngrok.io/report/getTodayReport`,
+        `https://30e6-42-116-226-110.ap.ngrok.io/report/getTodayReport`,
         {
           username: username,
         }
@@ -71,6 +72,32 @@ const HomeScreen = () => {
     };
     handleData().catch((err) => console.log(err));
   }, [username]);
+
+  useFocusEffect(() => {
+    const getData = async () => {
+      const user = await AsyncStorage.getItem("userInfo");
+      const userInfo = JSON.parse(user);
+      console.log(userInfo.username);
+      const response = await axios.get(
+        `https://30e6-42-116-226-110.ap.ngrok.io/auth/getUser/${userInfo.username}`
+      );
+      const { success } = response.data;
+      const { data } = response.data;
+      console.log(data);
+      console.log(success);
+      if (!success) {
+        Alert.alert("Account not found");
+        return;
+      }
+
+      setImage(
+        data.imagePath
+          ? data.imagePath
+          : "https://firebasestorage.googleapis.com/v0/b/le-repas.appspot.com/o/images%2Fgood.png?alt=media&token=de139437-3a20-4eb3-ba56-f6a591779d15"
+      );
+    };
+    getData().catch((err) => console.log(err));
+  }, []);
   //*End Region Handle Data
 
   //*Region Handle Sugar Levels
@@ -84,7 +111,7 @@ const HomeScreen = () => {
     }
     console.log(username);
     const res = await axios.post(
-      `https://d8ab-125-235-210-33.ap.ngrok.io/report/saveSugarlvl`,
+      `https://30e6-42-116-226-110.ap.ngrok.io/report/saveSugarlvl`,
       {
         username: username,
         sugarLevel: sugarlevel,
@@ -110,7 +137,7 @@ const HomeScreen = () => {
       setBMIComment("Overweight");
     }
     const res = await axios.post(
-      `https://d8ab-125-235-210-33.ap.ngrok.io/report/saveBMI`,
+      `https://30e6-42-116-226-110.ap.ngrok.io/report/saveBMI`,
       {
         username: username,
         BMI: newBMI,
@@ -140,7 +167,7 @@ const HomeScreen = () => {
             MainElement={
               <Image
                 style={styles.headerUserImage}
-                source={require("../assets/images/user.jpg")}
+                source={{uri: image}}
               />
             }
             IconBadgeStyle={{

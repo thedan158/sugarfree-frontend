@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
@@ -16,7 +16,11 @@ import ReportScreen from "./screens/ReportScreen";
 import OtpScreen from "./screens/OtpScreen";
 import OnBoardingScreen from "./screens/OnBoardingScreen";
 import SplashScreen from "./screens/SplashScreen";
-
+import Chat from "./screens/Chat";
+import EditProfileScreen from "./screens/EditProfileScreen";
+import ChangePassword from "./screens/ChangePassword";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 function HomeTabScreen() {
@@ -83,10 +87,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
-      <Stack.Screen
-        name="Splash"
-        component={SplashScreen}
-        options={{ headerShown: false }}
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Login"
@@ -129,17 +133,43 @@ export default function App() {
           }}
           component={ReportScreen}
         />
-        <Stack.Screen 
-        name="Otp"
-        component={OtpScreen}
-        options={{ headerShown: false }}
+        <Stack.Screen
+          name="Otp"
+          component={OtpScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
-        name="OnBoarding"
-        component={OnBoardingScreen}
-        options={{ headerShown: false }}
+          name="OnBoarding"
+          component={OnBoardingScreen}
+          options={{ headerShown: false }}
         />
-        
+        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfileScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: "#1C6BA4",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={{
+            headerStyle: {
+              backgroundColor: "#1C6BA4",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

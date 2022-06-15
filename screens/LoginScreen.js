@@ -29,17 +29,28 @@ const LoginScreen = () => {
     console.log(data);
     // Passing configuration object to axios
     const res = await axios.post(
-      `https://d8ab-125-235-210-33.ap.ngrok.io/auth/login`,
+      `https://30e6-42-116-226-110.ap.ngrok.io/auth/login`,
       {
         username: username,
         password: password,
       }
+    ).catch(err => {
+      console.log(err);
+      Alert.alert("Login failed");
+    }
     );
 
     const { success } = res.data;
+    const role = res.data.role;
+    const _id = res.data._id;
+    const imagePath = res.data.imagePath;
+    console.log(role);
     console.log(success);
     if (success) {
       await AsyncStorage.setItem("userInfo", JSON.stringify(data));
+      await AsyncStorage.setItem("role", role);
+      await AsyncStorage.setItem("_id", _id);
+      await AsyncStorage.setItem("imagePath", imagePath);
       navigation.navigate("HomeTab");
     } else {
       Alert.alert("Login failed");

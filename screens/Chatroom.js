@@ -10,50 +10,36 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const DataMenu = [
-  {
-    id: 1,
-    imgSource: require("../assets/images/user.jpg"),
-    doctorName: "Dr. Kim",
-    email: "thedan671@gmail.com",
-    hotline: "+84 987 654 321",
-    hospital: "Hospital 1",
-  },
-  {
-    id: 2,
-    imgSource: require("../assets/images/user1.jpg"),
-    doctorName: "Dr. Kasaki",
-    email: "thedan671@gmail.com",
-    hotline: "+84 987 654 321",
-    hospital: "Hospital 1",
-  },
-  {
-    id: 3,
-    imgSource: require("../assets/images/user2.jpg"),
-    doctorName: "Dr. Malines",
-    email: "thedan671@gmail.com",
-    hotline: "+84 987 654 321",
-    hospital: "Hospital 1",
-  },
-  {
-    id: 4,
-    imgSource: require("../assets/images/user3.jpg"),
-    doctorName: "Dr. TheDan",
-    email: "thedan671@gmail.com",
-    hotline: "+84 987 654 321",
-    hospital: "Hospital 1",
-  },
-];
-const Chatroom = () => {
-  const [dataFromState, setNewData] = useState(DataMenu);
+const Chatroom = ({navigation}) => {
+  
+  const [dataFromState, setNewData] = useState([]);
   const [search, setSearch] = useState("");
   const [masterData, setMasterData] = useState([]);
+  const [username, setUsername] = useState("");
   useEffect(() => {
-    setMasterData(DataMenu);
+    const getData = async () => {
+      const res = await axios.get(
+        "https://30e6-42-116-226-110.ap.ngrok.io/auth/getAllDoctors"
+      );
+      const { success, message } = res.data;
+      console.log(message);
+      if (!success) {
+        console.log("error");
+      }
+      setNewData(message);
+      setMasterData(message);
+      const userInfo = await AsyncStorage.getItem("userInfo");
+      const user = JSON.parse(userInfo);
+      setUsername(user.username);
+    };
+    getData().catch((err) => console.log(err));
   }, []);
 
   const searchFilterFunction = (text) => {
@@ -74,18 +60,21 @@ const Chatroom = () => {
   };
   const FlatListItem = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.containerItemFlatList}>
+      <TouchableOpacity
+        onPress={()=> navigation.navigate("Chat", {item, username})}
+        style={styles.containerItemFlatList}
+      >
         <View style={styles.containerImageItem}>
-          <Image source={item.imgSource} style={styles.imgSourceItem} />
+          <Image source={{uri: item.imagePath}} style={styles.imgSourceItem} />
         </View>
 
         <View style={styles.containerInfoItem}>
-          <Text style={styles.txtdoctorNameItem}>{item.doctorName}</Text>
+          <Text style={styles.txtdoctorNameItem}>Dr. {item.fullname}</Text>
           <View style={styles.containeremailItem}>
             <Text style={styles.txthospitalItemInfo2}>{item.hospital}</Text>
 
             <Text style={styles.txtemailItem}>{item.email}</Text>
-            <Text>({item.hotline})</Text>
+            <Text>(+84){item.phoneNumber}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -196,7 +185,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     width: 100,
-    height:100,
+    height: 100,
     padding: "2%",
   },
   containerInfoItem: {
