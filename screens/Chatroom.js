@@ -23,10 +23,11 @@ const Chatroom = ({navigation}) => {
   const [search, setSearch] = useState("");
   const [masterData, setMasterData] = useState([]);
   const [username, setUsername] = useState("");
+  const [isDoctor, setIsDoctor] = useState(false);
   useEffect(() => {
     const getData = async () => {
       const res = await axios.get(
-        "https://30e6-42-116-226-110.ap.ngrok.io/auth/getAllDoctors"
+        "https://9a46-171-253-177-116.ap.ngrok.io/auth/getAllDoctors"
       );
       const { success, message } = res.data;
       console.log(message);
@@ -61,7 +62,7 @@ const Chatroom = ({navigation}) => {
   const FlatListItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={()=> navigation.navigate("Chat", {item, username})}
+        onPress={()=> navigation.navigate("Chat", {item, username, isDoctor})}
         style={styles.containerItemFlatList}
       >
         <View style={styles.containerImageItem}>

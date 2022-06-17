@@ -41,7 +41,7 @@ const HomeScreen = () => {
       setUsername(user.username);
       console.log(username);
       const res = await axios.post(
-        `https://30e6-42-116-226-110.ap.ngrok.io/report/getTodayReport`,
+        `https://9a46-171-253-177-116.ap.ngrok.io/report/getTodayReport`,
         {
           username: username,
         }
@@ -79,7 +79,7 @@ const HomeScreen = () => {
       const userInfo = JSON.parse(user);
       console.log(userInfo.username);
       const response = await axios.get(
-        `https://30e6-42-116-226-110.ap.ngrok.io/auth/getUser/${userInfo.username}`
+        `https://9a46-171-253-177-116.ap.ngrok.io/auth/getUser/${userInfo.username}`
       );
       const { success } = response.data;
       const { data } = response.data;
@@ -111,7 +111,7 @@ const HomeScreen = () => {
     }
     console.log(username);
     const res = await axios.post(
-      `https://30e6-42-116-226-110.ap.ngrok.io/report/saveSugarlvl`,
+      `https://9a46-171-253-177-116.ap.ngrok.io/report/saveSugarlvl`,
       {
         username: username,
         sugarLevel: sugarlevel,
@@ -137,7 +137,7 @@ const HomeScreen = () => {
       setBMIComment("Overweight");
     }
     const res = await axios.post(
-      `https://30e6-42-116-226-110.ap.ngrok.io/report/saveBMI`,
+      `https://9a46-171-253-177-116.ap.ngrok.io/report/saveBMI`,
       {
         username: username,
         BMI: newBMI,

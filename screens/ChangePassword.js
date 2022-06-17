@@ -41,7 +41,7 @@ const ChangePassword = () => {
       return;
     }
     const res = await axios
-      .post(`https://30e6-42-116-226-110.ap.ngrok.io/auth/changePassword`, {
+      .post(`https://9a46-171-253-177-116.ap.ngrok.io/auth/changePassword`, {
         username: user.username,
         oldPassword: oldPassword,
         newPassword: password,
@@ -100,7 +100,7 @@ const ChangePassword = () => {
           <Image style={styles.logo} source={changepass}></Image>
         </View>
         <View>
-          <Text style={styles.textPleaseRegister}>Reset new password</Text>
+          <Text style={styles.textPleaseRegister}>Change your password</Text>
         </View>
       </View>
 
@@ -178,7 +178,7 @@ const ChangePassword = () => {
             onPress={handleChangePassword}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>Reset password</Text>
+            <Text style={styles.buttonText}>Change password</Text>
           </TouchableOpacity>
         </View>
       </View>

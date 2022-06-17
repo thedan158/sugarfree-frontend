@@ -1,12 +1,26 @@
 import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const windowWidth = Dimensions.get("screen").width;
 const windowHeight = Dimensions.get("screen").height;
 
 const SplashScreen = ({ navigation }) => {
   const [timePassed, setTimePassed] = useState(false);
+  const [loggedin, setLoggedin] = useState(false);
+  useEffect(() => {
+    const getData = async () => {
+    const user = AsyncStorage.getItem("userInfo");
+    const userInfo = JSON.parse(user);
+    if (!userInfo) {
+      setLoggedin(false);
+      return;
+    }
+    setLoggedin(true);
+  }
+  getData().catch((err) => console.log(err));
+  }, []);
 
   setTimeout(function () {
     setTimePassed(true);
@@ -40,7 +54,7 @@ const SplashScreen = ({ navigation }) => {
       </View>
     );
   }
-  navigation.replace("OnBoarding");
+  navigation.replace(loggedin ? "HomeTab" : "OnBoarding");
   return null;
 };
 

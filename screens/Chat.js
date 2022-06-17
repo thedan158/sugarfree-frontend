@@ -9,9 +9,11 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 const Chat = ({ route }) => {
-  const { item, username } = route.params;
+  const { item, username, isDoctor } = route.params;
   console.log(item.username);
   console.log(username);
+  console.log(isDoctor);
+  
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
@@ -20,16 +22,19 @@ const Chat = ({ route }) => {
   const userData = { _id, name: "", avatar: item.imagePath };
   const navigation = useNavigation();
   const [messages, setMessages] = useState([]);
-  // const [username, setUsername] = useState("anonymous");
   const [user, setUser] = useState(userData);
 
   const chatRef = db
     .collection("Users")
-    .doc(username)
+    .doc(!isDoctor ? username : item.username)
     .collection("chats")
-    .doc(item.username)
+    .doc(!isDoctor ? item.username : username)
     .collection("messages");
 
+  const doctorRef = db
+    .collection("Users")
+    .doc(!isDoctor ? item.username : username)
+    .collection("chats");
   useEffect(async () => {
     const getUserData = async () => {
       const userData = await AsyncStorage.getItem("userInfo");
@@ -68,7 +73,10 @@ const Chat = ({ route }) => {
   );
 
   const handeSend = async (messages) => {
+    var today = new Date();
+    var time = today.getHours() + ":" + today.getMinutes();
     const writes = messages.map((m) => chatRef.add(m));
+    (!isDoctor && doctorRef.doc(username).set({username: username, imagePath: user.avatar, lastestMessage: messages[0].text, lastsend: time})) ||
     await Promise.all(writes);
   };
 

@@ -19,11 +19,25 @@ import SplashScreen from "./screens/SplashScreen";
 import Chat from "./screens/Chat";
 import EditProfileScreen from "./screens/EditProfileScreen";
 import ChangePassword from "./screens/ChangePassword";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ChatroomForDoctor from "./screens/ChatroomForDoctor";
 LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 function HomeTabScreen() {
+  const [isDoctor, setIsDoctor] = useState(false);
+  useEffect(() => {
+    const getData = async () => {
+      const userRole = await AsyncStorage.getItem("role");
+      console.log("Role: "+userRole);
+      if (userRole === "doctor") {
+        setIsDoctor(true);
+      }
+    };
+    getData().catch((err) => console.log(err));
+  }, []);
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -67,7 +81,7 @@ function HomeTabScreen() {
           ),
         }}
         name="Chatroom"
-        component={Chatroom}
+        component={isDoctor ? ChatroomForDoctor : Chatroom}
       />
       <Tab.Screen
         options={{

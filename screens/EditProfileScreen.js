@@ -21,6 +21,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firebaseConfig } from "../firebase";
 import * as firebase from "firebase";
+import LoadingOwner from "../components/LoadingOwner.js";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -36,6 +37,14 @@ const EditProfileScreen = () => {
   const [image, setImage] = useState("null");
   const [visible, setVisible] = React.useState(false);
   const [url, setUrl] = useState("");
+  const [visibleLoad, setVisibleLoad] = React.useState(false);
+  const loadingAndPopup = () => {
+    setVisibleLoad(true);
+    setTimeout(() => {
+      setVisibleLoad(false);
+      setVisible(true);
+    }, 5000);
+  };
 
   useEffect(async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -48,7 +57,7 @@ const EditProfileScreen = () => {
       const userInfo = JSON.parse(user);
       console.log(userInfo.username);
       const response = await axios.get(
-        `https://30e6-42-116-226-110.ap.ngrok.io/auth/getUser/${userInfo.username}`
+        `https://9a46-171-253-177-116.ap.ngrok.io/auth/getUser/${userInfo.username}`
       );
       const { success } = response.data;
       const { data } = response.data;
@@ -84,6 +93,7 @@ const EditProfileScreen = () => {
     }
   };
   const handleUpdateProfile = async () => {
+    loadingAndPopup();
     //*Get user data from AsyncStorage
     const user = await AsyncStorage.getItem("userInfo");
     const userData = JSON.parse(user);
@@ -129,7 +139,7 @@ const EditProfileScreen = () => {
           console.log("blob:" + blob);
           console.log("url:" + url);
           const res = await axios.post(
-            `https://30e6-42-116-226-110.ap.ngrok.io/auth/updateUser/${userData.username}`,
+            `https://9a46-171-253-177-116.ap.ngrok.io/auth/updateUser/${userData.username}`,
             {
               fullname: fullname,
               address: address,
@@ -249,6 +259,8 @@ const EditProfileScreen = () => {
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>
           </CustomModal>
+           {/* Modal loading  */}
+        <LoadingOwner visible={visibleLoad}></LoadingOwner>
         </View>
       </ScrollView>
     </PatientInfoScreen>

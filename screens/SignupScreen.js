@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import CustomTextInput from "../components/CustomTextInput";
@@ -31,19 +32,19 @@ const SignupScreen = () => {
       fullname: fullname,
     };
     const res = await axios.post(
-      `https://30e6-42-116-226-110.ap.ngrok.io/otp/sendOtp`,
+      `https://9a46-171-253-177-116.ap.ngrok.io/otp/sendOtp`,
       { phoneNumber: "+84" + phoneNumber.substring(1) }
-    );
+    ).catch(err => {
+      console.log(err);
+      Alert.alert("Signup failed");
+    });
     const { success } = res.data;
     console.log(success);
     if (success) {
       await AsyncStorage.setItem("SignupInfo", JSON.stringify(data));
       navigation.navigate("Otp");
-    } else {
-      Alert.alert("Signup failed");
-    }
   };
-
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.signupHeaderContainer}>

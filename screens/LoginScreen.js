@@ -5,7 +5,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  Alert
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -13,6 +13,7 @@ import CustomTextInput from "../components/CustomTextInput";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingOwner from "../components/LoadingOwner";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -20,25 +21,32 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [isSecureEntry, setIsSecureEntry] = useState(true);
   const [visible, setVisible] = React.useState(false);
-  const handleLogin = async() => {
-    console.log('Login');
+  const [visibleLoad, setVisibleLoad] = React.useState(false);
+  const loadingAndPopup = () => {
+    setVisibleLoad(true);
+    setTimeout(() => {
+      setVisibleLoad(false);
+      setVisible(true);
+    }, 5000);
+  };
+  const handleLogin = async () => {
+    loadingAndPopup();
+    console.log("Login");
     const data = {
       username: username,
-      password: password
-    }
+      password: password,
+    };
     console.log(data);
     // Passing configuration object to axios
-    const res = await axios.post(
-      `https://30e6-42-116-226-110.ap.ngrok.io/auth/login`,
-      {
+    const res = await axios
+      .post(`https://9a46-171-253-177-116.ap.ngrok.io/auth/login`, {
         username: username,
         password: password,
-      }
-    ).catch(err => {
-      console.log(err);
-      Alert.alert("Login failed");
-    }
-    );
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert("Login failed");
+      });
 
     const { success } = res.data;
     const role = res.data.role;
@@ -104,7 +112,7 @@ const LoginScreen = () => {
 
         <View style={styles.buttonView}>
           <TouchableOpacity
-            onPress={()=>navigation.navigate('Signup')}
+            onPress={() => navigation.navigate("Signup")}
             style={styles.buttonSignupContainer}
           >
             <Text style={styles.buttonSignupText}>SIGN UP</Text>
@@ -125,6 +133,8 @@ const LoginScreen = () => {
           {/* Sign up section  */}
         </View>
         {/* Login button section  */}
+        {/* Modal loading  */}
+        <LoadingOwner visible={visibleLoad}></LoadingOwner>
       </View>
     </SafeAreaView>
   );

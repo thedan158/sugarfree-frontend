@@ -10,43 +10,46 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ReportScreen = () => {
+const ChatroomForDoctor = ({ navigation }) => {
   const [dataFromState, setNewData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [masterData, setMasterData] = useState([]);
+  const [username, setUsername] = useState("");
+  const [isDoctor, setIsDoctor] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     const getData = async () => {
       const userInfo = await AsyncStorage.getItem("userInfo");
       const user = JSON.parse(userInfo);
-      console.log(user.username);
-      const res = await axios.post(
-        "https://9a46-171-253-177-116.ap.ngrok.io/report/getAllReport",
-        {
-          username: user.username,
-        }
+      const res = await axios.get(
+        `https://9a46-171-253-177-116.ap.ngrok.io/doctor/getPatientMessages/${user.username}`
       );
       const { success, message } = res.data;
       console.log(message);
-      console.log(success);
+      if (!success) {
+        console.log("error");
+      }
       setNewData(message);
+      setMasterData(message);
+      setUsername(user.username);
+      setRefreshing(false);
     };
     getData().catch((err) => console.log(err));
-  }, []);
-
-  const [search, setSearch] = useState("");
-  const [masterData, setMasterData] = useState([]);
-  useEffect(() => {
-    setMasterData(dataFromState);
-  }, []);
+  }, [refreshing]);
 
   const searchFilterFunction = (text) => {
     if (text) {
       const newData = masterData.filter(function (item) {
-        const itemData = item.date ? item.date.toLowerCase() : "".toUpperCase();
+        const itemData = item.username
+          ? item.username.toLowerCase()
+          : "".toUpperCase();
         const textData = text.toLowerCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -59,38 +62,35 @@ const ReportScreen = () => {
   };
   const FlatListItem = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.containerItemFlatList}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Chat", { item, username, isDoctor })}
+        style={styles.containerItemFlatList}
+      >
         <View style={styles.containerImageItem}>
           <Image
-            source={
-              item.sugarLevel < 140 && item.sugarLevel > 70
-                ? require("../assets/images/good.png")
-                : require("../assets/images/warning.png")
-            }
+            source={{ uri: item.imagePath }}
             style={styles.imgSourceItem}
-          ></Image>
+          />
         </View>
 
         <View style={styles.containerInfoItem}>
-          <Text style={styles.txtdateItem}>{item.date}</Text>
-          <View style={styles.containersugarlvItem}>
-            <Text style={styles.txtsugarlvItem}>
-              Sugar Levels: {item.sugarLevel}
-            </Text>
-            <Text>BMI: {item.BMI}</Text>
-          </View>
+          <Text style={styles.txtdoctorNameItem}>{item.username}</Text>
+          <Text style={styles.txtMessage}>{item.lastestMessage}</Text>
+          <Text style={styles.txtTime}>{item.lastsend}</Text>
         </View>
       </TouchableOpacity>
     );
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.reportHeaderContainer}>
+      <View style={styles.doctorHeaderContainer}>
         <Image
-          source={require("../assets/images/clipboard.png")}
-          style={styles.reportImage}
+          source={require("../assets/images/doctor.png")}
+          style={styles.doctorImage}
         ></Image>
-        <Text style={styles.reportHeaderText}>{"Health\n Reports"}</Text>
+        <Text style={styles.doctorHeaderText}>
+          {"Connect to\n your patients"}
+        </Text>
       </View>
       <View style={styles.containerSearchView}>
         <TouchableOpacity>
@@ -102,14 +102,14 @@ const ReportScreen = () => {
           ></MaterialCommunityIcons>
         </TouchableOpacity>
         <TextInput
-          placeholder="Search Doctors..."
+          placeholder="Search Patient..."
           value={search}
           onChangeText={(text) => searchFilterFunction(text)}
           underlineColorAndroid="transparent"
           style={{ maxWidth: windowWidth - 120 }}
         />
       </View>
-      <View style={styles.body}>
+      <View style={styles.doctorContainer}>
         <View style={styles.containerMenuInfo}>
           <FlatList
             data={dataFromState}
@@ -119,6 +119,8 @@ const ReportScreen = () => {
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
+            refreshing={refreshing}
+            onRefresh={()=>setRefreshing(true)}
           />
         </View>
       </View>
@@ -126,11 +128,11 @@ const ReportScreen = () => {
   );
 };
 
-export default ReportScreen;
+export default ChatroomForDoctor;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  reportHeaderContainer: {
+  doctorHeaderContainer: {
     flex: 2.5,
     backgroundColor: "#009DC7",
     alignItems: "center",
@@ -139,24 +141,17 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
-  reportImage: {
+  doctorContainer: { flex: 6.5, backgroundColor: "#fff" },
+  doctorImage: {
     width: windowWidth * 0.5,
     height: "80%",
     resizeMode: "contain",
   },
-  reportHeaderText: {
+  doctorHeaderText: {
     fontSize: 30,
     color: "#fff",
-    marginLeft: 15,
     textAlign: "center",
     fontWeight: "bold",
-  },
-  body: {
-    flex: 7.5,
-    justifyContent: "center",
-    marginTop: "1.5%",
-    backgroundColor: "transparent",
-    marginBottom: "0%",
   },
   containerMenuInfo: {
     flex: 3,
@@ -199,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 7.5,
     marginLeft: "10%",
   },
-  containersugarlvItem: {
+  containeremailItem: {
     flex: 2,
     marginBottom: "3%",
   },
@@ -223,10 +218,13 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 7,
   },
-  txtsugarlvItem: {
+  txtemailItem: {
     color: "#000",
   },
-  txtdateItem: {
+  txthospitalItemInfo2: {
+    color: "#000",
+  },
+  txtdoctorNameItem: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: "2%",
@@ -246,4 +244,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: "2%",
   },
+  txtMessage: {
+    fontSize: 15,
+    marginBottom: "2%",
+    },
+    txtTime: {
+    fontSize: 15,
+    marginBottom: "2%",
+    },
 });
