@@ -77,7 +77,7 @@ const MealScreen = () => {
     console.log("MealScreen");
     const getMeal = async () => {
       const resBreakfast = await axios.get(
-        `https://9a46-171-253-177-116.ap.ngrok.io/meal/getMeal/breakfast`
+        `http://localhost:3000/meal/getMeal/breakfast`
       );
       const { message, success } = resBreakfast.data;
       console.log(message);
@@ -86,13 +86,13 @@ const MealScreen = () => {
       setBreakfastName(message[0].name);
 
       const resLunch = await axios.get(
-        `https://9a46-171-253-177-116.ap.ngrok.io/meal/getMeal/lunch`
+        `http://localhost:3000/meal/getMeal/lunch`
       );
       console.log(resLunch.data);
       setLunch(resLunch.data.message);
       setLunchName(resLunch.data.message[0].name);
       const resDinner = await axios.get(
-        `https://9a46-171-253-177-116.ap.ngrok.io/meal/getMeal/dinner`
+        `http://localhost:3000/meal/getMeal/dinner`
       );
       console.log(resDinner.data);
       setDinner(resDinner.data.message);

@@ -57,7 +57,7 @@ const EditProfileScreen = () => {
       const userInfo = JSON.parse(user);
       console.log(userInfo.username);
       const response = await axios.get(
-        `https://9a46-171-253-177-116.ap.ngrok.io/auth/getUser/${userInfo.username}`
+        `http://localhost:3000/auth/getUser/${userInfo.username}`
       );
       const { success } = response.data;
       const { data } = response.data;
@@ -139,7 +139,7 @@ const EditProfileScreen = () => {
           console.log("blob:" + blob);
           console.log("url:" + url);
           const res = await axios.post(
-            `https://9a46-171-253-177-116.ap.ngrok.io/auth/updateUser/${userData.username}`,
+            `http://localhost:3000/auth/updateUser/${userData.username}`,
             {
               fullname: fullname,
               address: address,

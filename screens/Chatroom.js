@@ -16,33 +16,25 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getStatelessAPI } from "../api/ApiActions";
 
-const Chatroom = ({navigation}) => {
-  
+const Chatroom = ({ navigation }) => {
   const [dataFromState, setNewData] = useState([]);
   const [search, setSearch] = useState("");
   const [masterData, setMasterData] = useState([]);
   const [username, setUsername] = useState("");
   const [isDoctor, setIsDoctor] = useState(false);
-  useEffect(() => {
-    const getData = async () => {
-      const res = await axios.get(
-        "https://9a46-171-253-177-116.ap.ngrok.io/auth/getAllDoctors"
-      );
-      const { success, message } = res.data;
-      console.log(message);
-      if (!success) {
-        console.log("error");
-      }
+
+  const getData = async () => {
+    try {
+      const res = await getStatelessAPI("getAllDoctor", null);
+      const { message } = res;
       setNewData(message);
       setMasterData(message);
-      const userInfo = await AsyncStorage.getItem("userInfo");
-      const user = JSON.parse(userInfo);
-      setUsername(user.username);
-    };
-    getData().catch((err) => console.log(err));
-  }, []);
-
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const searchFilterFunction = (text) => {
     if (text) {
       const newData = masterData.filter(function (item) {
@@ -62,11 +54,16 @@ const Chatroom = ({navigation}) => {
   const FlatListItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={()=> navigation.navigate("Chat", {item, username, isDoctor})}
+        onPress={() =>
+          navigation.navigate("Chat", { item, username, isDoctor })
+        }
         style={styles.containerItemFlatList}
       >
         <View style={styles.containerImageItem}>
-          <Image source={{uri: item.imagePath}} style={styles.imgSourceItem} />
+          <Image
+            source={{ uri: item.imagePath }}
+            style={styles.imgSourceItem}
+          />
         </View>
 
         <View style={styles.containerInfoItem}>
@@ -81,6 +78,11 @@ const Chatroom = ({navigation}) => {
       </TouchableOpacity>
     );
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.doctorHeaderContainer}>
@@ -139,7 +141,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
-  doctorContainer: { flex: 6.5, backgroundColor: "#fff" },
+  doctorContainer: {
+    flex: 6.5,
+    justifyContent: "center",
+    marginTop: "1.5%",
+    backgroundColor: "transparent",
+    marginBottom: "0%",
+  },
   doctorImage: {
     width: windowWidth * 0.5,
     height: "80%",

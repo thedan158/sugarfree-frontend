@@ -1,0 +1,76 @@
+import { StyleSheet } from "react-native";
+export const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#fff" },
+  loginHeaderContainer: {
+    flex: 4,
+    backgroundColor: "#22d5d4",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    borderBottomEndRadius: 500,
+  },
+  loginBodyContainer: {
+    flex: 1.5,
+    backgroundColor: "#fff",
+    alignItems: "center",
+  },
+  loginFooterContainer: {
+    flex: 5.5,
+    backgroundColor: "#22d5d4",
+    alignItems: "center",
+    borderTopLeftRadius: 500,
+  },
+  logoContainer: {
+    width: 150,
+    height: 150,
+    backgroundColor: "#f0f",
+    borderRadius: 100,
+  },
+  logo: { width: 150, height: 150, borderRadius: 100 },
+  loginHeader: {
+    margin: 10,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#9AA0B8",
+  },
+  loginHeader2: { fontSize: 30, fontWeight: "bold", color: "#22d5d4" },
+
+  forgotPassword: { color: "#fff", fontSize: 15, marginTop: 10 },
+  buttonSignupContainer: {
+    width: "40%",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 10,
+  },
+  buttonSignupText: {
+    fontSize: 20,
+    color: "#22d5d4",
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+  buttonView: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    flexDirection: "row",
+  },
+  buttonContainer: {
+    width: "40%",
+    alignItems: "center",
+    backgroundColor: "#4D77FF",
+    borderRadius: 10,
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: "#fff",
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+});

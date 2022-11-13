@@ -2,8 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
-import LoginScreen from "./screens/LoginScreen";
+import HomeScreen from "./screens/home";
+import LoginScreen from "./screens/login";
 import Chatroom from "./screens/Chatroom";
 import MealScreen from "./screens/MealScreen";
 import ProfileScreen from "./screens/ProfileScreen";
@@ -12,7 +12,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SignupScreen from "./screens/SignupScreen";
 import PillScreen from "./screens/PillScreen";
-import ReportScreen from "./screens/ReportScreen";
+import ReportScreen from "./screens/report";
 import OtpScreen from "./screens/OtpScreen";
 import OnBoardingScreen from "./screens/OnBoardingScreen";
 import SplashScreen from "./screens/SplashScreen";
@@ -22,21 +22,25 @@ import ChangePassword from "./screens/ChangePassword";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatroomForDoctor from "./screens/ChatroomForDoctor";
+import { Provider, useSelector } from "react-redux";
+import store from "./app/store";
+
 LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 function HomeTabScreen() {
+  const userRole = useSelector((state) => state.user.userRole);
   const [isDoctor, setIsDoctor] = useState(false);
+
+  const getData = async () => {
+    if (userRole === "doctor") {
+      setIsDoctor(true);
+    }
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      const userRole = await AsyncStorage.getItem("role");
-      console.log("Role: "+userRole);
-      if (userRole === "doctor") {
-        setIsDoctor(true);
-      }
-    };
-    getData().catch((err) => console.log(err));
+    getData();
   }, []);
   return (
     <Tab.Navigator
@@ -97,7 +101,9 @@ function HomeTabScreen() {
     </Tab.Navigator>
   );
 }
-export default function App() {
+function Navigation() {
+  const state = useSelector((state) => state);
+  console.log("current state", state);
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
@@ -188,12 +194,10 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default function App() {
+  return (
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
+  );
+}

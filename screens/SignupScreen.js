@@ -32,7 +32,7 @@ const SignupScreen = () => {
       fullname: fullname,
     };
     const res = await axios.post(
-      `https://9a46-171-253-177-116.ap.ngrok.io/otp/sendOtp`,
+      `http://localhost:3000/otp/sendOtp`,
       { phoneNumber: "+84" + phoneNumber.substring(1) }
     ).catch(err => {
       console.log(err);

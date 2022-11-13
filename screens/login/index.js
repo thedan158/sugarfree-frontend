@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   SafeAreaView,
@@ -7,16 +6,19 @@ import {
   Image,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import CustomTextInput from "../components/CustomTextInput";
+import CustomTextInput from "../../components/CustomTextInput";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import LoadingOwner from "../components/LoadingOwner";
+import LoadingOwner from "../../components/LoadingOwner";
+import { useDispatch, useSelector } from "react-redux";
+import { getAPIActionJSON } from "../../api/ApiActions";
+import { styles } from "./styles";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const isLoggedin = useSelector((state) => state.user.isLoggedin);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSecureEntry, setIsSecureEntry] = useState(true);
@@ -29,48 +31,30 @@ const LoginScreen = () => {
       setVisible(true);
     }, 5000);
   };
-  const handleLogin = async () => {
-    loadingAndPopup();
-    console.log("Login");
-    const data = {
-      username: username,
-      password: password,
-    };
-    console.log(data);
-    // Passing configuration object to axios
-    const res = await axios
-      .post(`https://9a46-171-253-177-116.ap.ngrok.io/auth/login`, {
-        username: username,
-        password: password,
-      })
-      .catch((err) => {
-        console.log(err);
-        Alert.alert("Login failed");
-      });
-
-    const { success } = res.data;
-    const role = res.data.role;
-    const _id = res.data._id;
-    const imagePath = res.data.imagePath;
-    console.log(role);
-    console.log(success);
-    if (success) {
-      await AsyncStorage.setItem("userInfo", JSON.stringify(data));
-      await AsyncStorage.setItem("role", role);
-      await AsyncStorage.setItem("_id", _id);
-      await AsyncStorage.setItem("imagePath", imagePath);
-      navigation.navigate("HomeTab");
-    } else {
+  const handleLogin = () => {
+    try {
+      loadingAndPopup();
+      dispatch(
+        getAPIActionJSON("login", {
+          username: username,
+          password: password,
+        })
+      );
+    } catch (error) {
+      console.log("catch error", error);
       Alert.alert("Login failed");
     }
   };
+  useEffect(() => {
+    isLoggedin && navigation.navigate("HomeTab");
+  }, [isLoggedin]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.loginHeaderContainer}>
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
-            source={require("../assets/images/logo.png")}
+            source={require("../../assets/images/logo.png")}
           ></Image>
         </View>
       </View>
@@ -141,79 +125,3 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  loginHeaderContainer: {
-    flex: 4,
-    backgroundColor: "#22d5d4",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    borderBottomEndRadius: 500,
-  },
-  loginBodyContainer: {
-    flex: 1.5,
-    backgroundColor: "#fff",
-    alignItems: "center",
-  },
-  loginFooterContainer: {
-    flex: 5.5,
-    backgroundColor: "#22d5d4",
-    alignItems: "center",
-    borderTopLeftRadius: 500,
-  },
-  logoContainer: {
-    width: 150,
-    height: 150,
-    backgroundColor: "#f0f",
-    borderRadius: 100,
-  },
-  logo: { width: 150, height: 150, borderRadius: 100 },
-  loginHeader: {
-    margin: 10,
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#9AA0B8",
-  },
-  loginHeader2: { fontSize: 30, fontWeight: "bold", color: "#22d5d4" },
-
-  forgotPassword: { color: "#fff", fontSize: 15, marginTop: 10 },
-  buttonSignupContainer: {
-    width: "40%",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    margin: 10,
-  },
-  buttonSignupText: {
-    fontSize: 20,
-    color: "#22d5d4",
-    fontWeight: "bold",
-    marginRight: 10,
-  },
-  buttonView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    flexDirection: "row",
-  },
-  buttonContainer: {
-    width: "40%",
-    alignItems: "center",
-    backgroundColor: "#4D77FF",
-    borderRadius: 10,
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    margin: 10,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "#fff",
-    fontWeight: "bold",
-    marginRight: 10,
-  },
-});

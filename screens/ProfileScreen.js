@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,6 +17,7 @@ import ModalPrivacy from "../components/ModalPrivacy";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const isFocus = useIsFocused();
   const [fullname, setFullname] = React.useState("");
   const [role, setRole] = React.useState("");
   const [image, setImage] = React.useState("");
@@ -27,13 +28,13 @@ const ProfileScreen = () => {
     await AsyncStorage.removeItem("_id");
     navigation.navigate("Login");
   };
-  useFocusEffect(() => {
+  useEffect(() => {
     const getData = async () => {
       const user = await AsyncStorage.getItem("userInfo");
       const userInfo = JSON.parse(user);
       console.log(userInfo.username);
       const response = await axios.get(
-        `https://9a46-171-253-177-116.ap.ngrok.io/auth/getUser/${userInfo.username}`
+        `http://localhost:3000/auth/getUser/${userInfo.username}`
       );
       const { success } = response.data;
       const { data } = response.data;
@@ -53,7 +54,7 @@ const ProfileScreen = () => {
       );
     };
     getData().catch((err) => console.log(err));
-  }, []);
+  }, [isFocus]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -29,7 +29,7 @@ const ChatroomForDoctor = ({ navigation }) => {
       const userInfo = await AsyncStorage.getItem("userInfo");
       const user = JSON.parse(userInfo);
       const res = await axios.get(
-        `https://9a46-171-253-177-116.ap.ngrok.io/doctor/getPatientMessages/${user.username}`
+        `http://localhost:3000/doctor/getPatientMessages/${user.username}`
       );
       const { success, message } = res.data;
       console.log(message);

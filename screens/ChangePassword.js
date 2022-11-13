@@ -18,11 +18,12 @@ import CustomModal from "../components/CustomModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const ChangePassword = () => {
+const ChangePassword = () => {  
   const [confirmPassword, setConfirmPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +42,7 @@ const ChangePassword = () => {
       return;
     }
     const res = await axios
-      .post(`https://9a46-171-253-177-116.ap.ngrok.io/auth/changePassword`, {
+      .post(`http://localhost:3000/auth/changePassword`, {
         username: user.username,
         oldPassword: oldPassword,
         newPassword: password,
