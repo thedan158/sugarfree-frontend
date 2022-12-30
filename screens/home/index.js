@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   Text,
   View,
   Image,
@@ -7,6 +6,8 @@ import {
   TextInput,
   Modal,
   Alert,
+  ScrollView,
+  Dimensions,
 } from "react-native";
 import IconBadge from "react-native-icon-badge";
 import React, { useState, useEffect } from "react";
@@ -15,6 +16,10 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { getAPIActionJSON } from "../../api/ApiActions";
 import { styles } from "./styles";
+import useFetchReport from "../../hooks/useFetchReports";
+import useFetchDoctorList from "../../hooks/useFetchDoctorList";
+import Carousel from "react-native-reanimated-carousel";
+const width = Dimensions.get("window").width;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -33,7 +38,11 @@ const HomeScreen = () => {
   const [sugarlevel, setSugarlevel] = useState(todaySugarLevel);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalBMIVisible, setModalBMIVisible] = useState(false);
-
+  const data = [
+    "https://firebasestorage.googleapis.com/v0/b/sugarcare-9f6bd.appspot.com/o/images%2Fcarousel%2Fmedicine_carousel.png?alt=media&token=f27c4cfc-c4f5-4212-a41b-05f1b2890a7c",
+    "https://firebasestorage.googleapis.com/v0/b/sugarcare-9f6bd.appspot.com/o/images%2Fcarousel%2Fclipboard_carousel.png?alt=media&token=8fd6f0bf-0764-48b2-92c8-b2fe32773011",
+    "https://firebasestorage.googleapis.com/v0/b/sugarcare-9f6bd.appspot.com/o/images%2Fcarousel%2Fdoctor_carousel.png?alt=media&token=34e6ab80-fe0f-4cb3-bc0f-ddbeb7b99558",
+  ];
   const handleData = () => {
     if (todayBMI < 18.5) {
       setBMIComment("Underweight");
@@ -93,7 +102,6 @@ const HomeScreen = () => {
   };
   //*End Region Handle BMI
 
-
   //*Region Handle Data
   useEffect(() => {
     dispatch(getAPIActionJSON("getTodayReport", { username: username }));
@@ -102,13 +110,16 @@ const HomeScreen = () => {
     handleData();
   }, [todaySugarLevel, todayBMI]);
   useEffect(() => {
-    dispatch(getAPIActionJSON("getUser", null, null, username));
+    dispatch(getAPIActionJSON("getUser", null, null, `/${username}`));
+    dispatch({ type: "clearReviewing" });
   }, [isFocus]);
+  useFetchReport();
+  useFetchDoctorList(isFocus);
   //*End Region Handle Data
 
   return (
     //   Welcome to SugarFree!
-    <SafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {/* Header Section */}
 
       <View style={styles.headerSection}>
@@ -144,24 +155,33 @@ const HomeScreen = () => {
 
       {/* Search Section */}
       <View style={styles.searchSection}>
-        <View style={styles.searchIconSection}>
-          <MaterialCommunityIcons name="magnify" size={24} color="#8AA0BC" />
-        </View>
-        <View style={styles.searchInputSection}>
-          <TextInput
-            placeholder="Search for medical..."
-            // selectTextOnFocus='true'
-          ></TextInput>
-        </View>
-        <View style={styles.filterIcon}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="filter-variant"
-              size={24}
-              color="#8AA0BC"
-            />
-          </TouchableOpacity>
-        </View>
+        <Carousel
+          loop
+          width={width}
+          height={width / 2}
+          autoPlay={true}
+          data={data}
+          scrollAnimationDuration={1200}
+          onSnapToItem={(index) => {}}
+          renderItem={({ item, index }) => (
+            <View
+              style={{
+                shadowOpacity: 0.1,
+                flex: 1,
+                margin: 10,
+                borderRadius: 10,
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                style={{ height: "100%", width: "100%", borderRadius: 10 }}
+                source={{
+                  uri: item,
+                }}
+              />
+            </View>
+          )}
+        />
       </View>
       {/* End Section */}
 
@@ -197,7 +217,7 @@ const HomeScreen = () => {
           </View>
           <View style={styles.serviceButton} backgroundColor="#D6F6FF">
             <TouchableOpacity
-              onPress={() => navigation.navigate("Report")}
+              onPress={() => navigation.navigate("ReportTab")}
               style={styles.serviceButton}
             >
               <View style={styles.buttonIcon}>
@@ -392,7 +412,7 @@ const HomeScreen = () => {
       </Modal>
       {/* End Modal */}
       {/* End Section */}
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

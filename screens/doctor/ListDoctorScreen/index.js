@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   SafeAreaView,
@@ -10,20 +9,15 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-const windowHeight = Dimensions.get("window").height;
-const windowWidth = Dimensions.get("window").width;
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getStatelessAPI } from "../api/ApiActions";
+import { styles } from "./styles";
+import { getStatelessAPI } from "../../../api/ApiActions";
 
-const Chatroom = ({ navigation }) => {
+const ListDoctorScreen = ({ navigation }) => {
+  const windowWidth = Dimensions.get("window").width;
   const [dataFromState, setNewData] = useState([]);
   const [search, setSearch] = useState("");
   const [masterData, setMasterData] = useState([]);
-  const [username, setUsername] = useState("");
-  const [isDoctor, setIsDoctor] = useState(false);
 
   const getData = async () => {
     try {
@@ -54,9 +48,7 @@ const Chatroom = ({ navigation }) => {
   const FlatListItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("Chat", { item, username, isDoctor })
-        }
+        onPress={() => navigation.navigate("Chat", { item })}
         style={styles.containerItemFlatList}
       >
         <View style={styles.containerImageItem}>
@@ -87,7 +79,7 @@ const Chatroom = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.doctorHeaderContainer}>
         <Image
-          source={require("../assets/images/doctor.png")}
+          source={require("../../../assets/images/doctor.png")}
           style={styles.doctorImage}
         ></Image>
         <Text style={styles.doctorHeaderText}>
@@ -128,127 +120,4 @@ const Chatroom = ({ navigation }) => {
   );
 };
 
-export default Chatroom;
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  doctorHeaderContainer: {
-    flex: 2.5,
-    backgroundColor: "#009DC7",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    flexDirection: "row",
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-  },
-  doctorContainer: {
-    flex: 6.5,
-    justifyContent: "center",
-    marginTop: "1.5%",
-    backgroundColor: "transparent",
-    marginBottom: "0%",
-  },
-  doctorImage: {
-    width: windowWidth * 0.5,
-    height: "80%",
-    resizeMode: "contain",
-  },
-  doctorHeaderText: {
-    fontSize: 30,
-    color: "#fff",
-    marginLeft: 10,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  containerMenuInfo: {
-    flex: 3,
-    justifyContent: "center",
-    marginTop: "1.5%",
-    backgroundColor: "transparent",
-    marginBottom: "0%",
-  },
-  containerItemFlatList: {
-    width: windowWidth - 40,
-    height: "100%",
-    paddingHorizontal: "5%",
-    backgroundColor: "#FFFFFF",
-    marginVertical: "2%",
-    alignSelf: "center",
-    justifyContent: "center",
-    borderRadius: 15,
-    paddingBottom: "1.5%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    flex: 1,
-    flexDirection: "row",
-  },
-  containerImageItem: {
-    flex: 2.5,
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-    width: 100,
-    height: 100,
-    padding: "2%",
-  },
-  containerInfoItem: {
-    flex: 7.5,
-    marginLeft: "10%",
-  },
-  containeremailItem: {
-    flex: 2,
-    marginBottom: "3%",
-  },
-  containerSearchView: {
-    flexDirection: "row",
-    width: windowWidth - 80,
-    justifyContent: "flex-start",
-    alignSelf: "center",
-    alignItems: "center",
-    marginTop: "3%",
-    maxWidth: windowWidth - 80,
-    borderRadius: 45,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    flex: 1,
-    elevation: 7,
-  },
-  txtemailItem: {
-    color: "#000",
-  },
-  txthospitalItemInfo2: {
-    color: "#000",
-  },
-  txtdoctorNameItem: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: "2%",
-  },
-  icSearch: {
-    height: 20,
-    width: 20,
-    marginRight: "5%",
-    marginLeft: 15,
-  },
-  imgSourceItem: {
-    margin: "2%",
-    borderRadius: 15,
-    height: 100,
-    width: 100,
-    alignSelf: "center",
-    flex: 1,
-    padding: "2%",
-  },
-});
+export default ListDoctorScreen;

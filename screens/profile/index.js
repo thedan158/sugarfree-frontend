@@ -7,60 +7,29 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { useFocusEffect } from "@react-navigation/native";
-import ModalPrivacy from "../components/ModalPrivacy";
+import { useNavigation } from "@react-navigation/native";
+import ModalPrivacy from "../../components/ModalPrivacy";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-  const isFocus = useIsFocused();
-  const [fullname, setFullname] = React.useState("");
-  const [role, setRole] = React.useState("");
-  const [image, setImage] = React.useState("");
+  const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("userInfo");
-    await AsyncStorage.removeItem("role");
-    await AsyncStorage.removeItem("_id");
+  const userImagePath = useSelector((state) => state.user.userImagePath);
+  const fullname = useSelector((state) => state.user.fullname);
+  const role = useSelector((state) => state.user.role);
+  const handleLogout = () => {
+    dispatch({ type: `logout` });
     navigation.navigate("Login");
   };
-  useEffect(() => {
-    const getData = async () => {
-      const user = await AsyncStorage.getItem("userInfo");
-      const userInfo = JSON.parse(user);
-      console.log(userInfo.username);
-      const response = await axios.get(
-        `http://localhost:3000/auth/getUser/${userInfo.username}`
-      );
-      const { success } = response.data;
-      const { data } = response.data;
-      console.log(data);
-      console.log(success);
-      if (!success) {
-        Alert.alert("Account not found");
-        return;
-      }
-
-      setFullname(data.fullname ? data.fullname : userInfo.username);
-      setRole(data.role ? data.role : userInfo.role);
-      setImage(
-        data.imagePath
-          ? data.imagePath
-          : "https://firebasestorage.googleapis.com/v0/b/le-repas.appspot.com/o/images%2Fgood.png?alt=media&token=de139437-3a20-4eb3-ba56-f6a591779d15"
-      );
-    };
-    getData().catch((err) => console.log(err));
-  }, [isFocus]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeaderContainer}>
         <View style={styles.profileHeader}>
-          <Image style={styles.profileImage} source={{ uri: image }} />
+          <Image style={styles.profileImage} source={{ uri: userImagePath }} />
         </View>
         <Text style={styles.profileName}>{fullname}</Text>
         <Text style={styles.profileRole}>{role}</Text>
@@ -90,7 +59,7 @@ const ProfileScreen = () => {
           <Text style={styles.profileButtonText}>Privacy Policy</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Report")}
+          onPress={() => navigation.navigate("ReportTab")}
           style={styles.profileButton}
         >
           <MaterialCommunityIcons

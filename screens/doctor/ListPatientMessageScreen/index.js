@@ -10,39 +10,44 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { styles } from "./styles";
+import axios from "axios";
+import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { getStatelessAPI } from "../../api/ApiActions";
-const windowWidth = Dimensions.get("window").width;
+import { styles } from "./styles";
+import { getStatelessAPI } from "../../../api/ApiActions";
 
-const ReportScreen = () => {
+const ListPatientMessageScreen = ({ navigation }) => {
+  const isFocus = useIsFocused();
+  const windowWidth = Dimensions.get("window").width;
+  const username = useSelector((state) => state.user.username);
   const [dataFromState, setNewData] = useState([]);
   const [search, setSearch] = useState("");
   const [masterData, setMasterData] = useState([]);
-  const username = useSelector((state) => state.user.username);
-
+  const [refreshing, setRefreshing] = useState(false);
   const getData = async () => {
-    try {
-      const res = await getStatelessAPI("getAllReport", { username: username });
-      const { message } = res;
-      setNewData(message);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await getStatelessAPI(
+      "getPatientMessage",
+      null,
+      null,
+      null,
+      `/${username}`
+    );
+    const { message } = res;
+    setNewData(message);
+    setMasterData(message);
+    setRefreshing(false);
   };
 
   useEffect(() => {
     getData();
-  }, []);
-
-  useEffect(() => {
-    setMasterData(dataFromState);
-  }, []);
+  }, [refreshing, isFocus]);
 
   const searchFilterFunction = (text) => {
     if (text) {
       const newData = masterData.filter(function (item) {
-        const itemData = item.date ? item.date.toLowerCase() : "".toUpperCase();
+        const itemData = item.username
+          ? item.username.toLowerCase()
+          : "".toUpperCase();
         const textData = text.toLowerCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -55,38 +60,35 @@ const ReportScreen = () => {
   };
   const FlatListItem = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.containerItemFlatList}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Chat", { item })}
+        style={styles.containerItemFlatList}
+      >
         <View style={styles.containerImageItem}>
           <Image
-            source={
-              item.sugarLevel < 140 && item.sugarLevel > 70
-                ? require("../../assets/images/good.png")
-                : require("../../assets/images/warning.png")
-            }
+            source={{ uri: item.imagePath }}
             style={styles.imgSourceItem}
-          ></Image>
+          />
         </View>
 
         <View style={styles.containerInfoItem}>
-          <Text style={styles.txtdateItem}>{item.date}</Text>
-          <View style={styles.containersugarlvItem}>
-            <Text style={styles.txtsugarlvItem}>
-              Sugar Levels: {item.sugarLevel}
-            </Text>
-            <Text>BMI: {item.BMI}</Text>
-          </View>
+          <Text style={styles.txtdoctorNameItem}>{item.username}</Text>
+          <Text style={styles.txtMessage}>{item.lastestMessage}</Text>
+          <Text style={styles.txtTime}>{item.lastsend}</Text>
         </View>
       </TouchableOpacity>
     );
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.reportHeaderContainer}>
+      <View style={styles.doctorHeaderContainer}>
         <Image
-          source={require("../../assets/images/clipboard.png")}
-          style={styles.reportImage}
+          source={require("../../../assets/images/doctor.png")}
+          style={styles.doctorImage}
         ></Image>
-        <Text style={styles.reportHeaderText}>{"Health\n Reports"}</Text>
+        <Text style={styles.doctorHeaderText}>
+          {"Connect to\n your patients"}
+        </Text>
       </View>
       <View style={styles.containerSearchView}>
         <TouchableOpacity>
@@ -98,14 +100,14 @@ const ReportScreen = () => {
           ></MaterialCommunityIcons>
         </TouchableOpacity>
         <TextInput
-          placeholder="Search Doctors..."
+          placeholder="Search Patient..."
           value={search}
           onChangeText={(text) => searchFilterFunction(text)}
           underlineColorAndroid="transparent"
           style={{ maxWidth: windowWidth - 120 }}
         />
       </View>
-      <View style={styles.body}>
+      <View style={styles.doctorContainer}>
         <View style={styles.containerMenuInfo}>
           <FlatList
             data={dataFromState}
@@ -115,6 +117,8 @@ const ReportScreen = () => {
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
+            refreshing={refreshing}
+            onRefresh={() => setRefreshing(true)}
           />
         </View>
       </View>
@@ -122,4 +126,4 @@ const ReportScreen = () => {
   );
 };
 
-export default ReportScreen;
+export default ListPatientMessageScreen;

@@ -8,6 +8,13 @@ const initialState = {
   todayBMI: 0,
   phoneNumber: "",
   isLoggedin: false,
+  userHistory: [],
+  reviewing: "",
+  listDoctor: [],
+  listPillInsulin: [],
+  listPillAmylinomimetic: [],
+  listPillType2: [],
+  currentPrescription: [],
 };
 export default function UserReducer(state = initialState, action) {
   switch (action.type) {
@@ -28,6 +35,12 @@ export default function UserReducer(state = initialState, action) {
           ...state,
           todayBMI: action.data.message.BMI,
           todaySugarLevel: action.data.message.sugarLevel,
+        };
+      } else {
+        return {
+          ...state,
+          todayBMI: 0,
+          todaySugarLevel: "",
         };
       }
     case "saveTodaySugarLevel.reply":
@@ -56,6 +69,56 @@ export default function UserReducer(state = initialState, action) {
           id: action.data.data._id,
         };
       }
+    case "logout":
+      return {
+        ...state,
+        isLoggedin: false,
+      };
+    case "getAllReport.reply":
+      return {
+        ...state,
+        userHistory: action.data.message,
+      };
+    case "changeReviewing":
+      return {
+        ...state,
+        reviewing: action.data,
+      };
+    case "changeCurrentPrescription":
+      return {
+        ...state,
+        currentPrescription: action.data,
+      };
+    case "clearReviewing":
+      return {
+        ...state,
+        reviewing: "",
+      };
+    case "getAllDoctor.reply":
+      return {
+        ...state,
+        listDoctor: action.data.message,
+      };
+    case "getAllMedicine.reply":
+      if (action.data.message[0].type === "type 2") {
+        return {
+          ...state,
+          listPillType2: action.data.message,
+        };
+      }
+      if (action.data.message[0].type === "insulin") {
+        return {
+          ...state,
+          listPillInsulin: action.data.message,
+        };
+      }
+      if (action.data.message[0].type === "amylinomimetic") {
+        return {
+          ...state,
+          listPillAmylinomimetic: action.data.message,
+        };
+      }
+
     /* falls through */
     default:
       return state;

@@ -1,47 +1,40 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/home";
 import LoginScreen from "./screens/login";
-import Chatroom from "./screens/Chatroom";
+import ListDoctorScreen from "./screens/doctor/ListDoctorScreen";
 import MealScreen from "./screens/MealScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import ProfileScreen from "./screens/profile";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import SignupScreen from "./screens/SignupScreen";
-import PillScreen from "./screens/PillScreen";
-import ReportScreen from "./screens/report";
+import PillScreen from "./screens/pill/pillList";
 import OtpScreen from "./screens/OtpScreen";
 import OnBoardingScreen from "./screens/OnBoardingScreen";
 import SplashScreen from "./screens/SplashScreen";
-import Chat from "./screens/Chat";
+import Chat from "./screens/doctor/Chatroom";
 import EditProfileScreen from "./screens/EditProfileScreen";
 import ChangePassword from "./screens/ChangePassword";
-import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ChatroomForDoctor from "./screens/ChatroomForDoctor";
+import { LogBox } from "react-native";
+import ListPatientMessageScreen from "./screens/doctor/ListPatientMessageScreen";
 import { Provider, useSelector } from "react-redux";
 import store from "./app/store";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import ReportHistory from "./screens/report/reportHistory";
+import ReportChart from "./screens/report/reportChart";
+import NewListDoctorScreen from "./screens/doctor/NewListDoctorScreen";
+import PillHistoryScreen from "./screens/pill/pillHistory";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import PrescriptionScreen from "./screens/pill/prescriptionScreen";
+import NewPrescriptionScreen from "./screens/pill/newPrescriptionScreen";
 
 LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const TopTab = createMaterialTopTabNavigator();
 function HomeTabScreen() {
-  const userRole = useSelector((state) => state.user.userRole);
-  const [isDoctor, setIsDoctor] = useState(false);
-
-  const getData = async () => {
-    if (userRole === "doctor") {
-      setIsDoctor(true);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const userRole = useSelector((state) => state.user.role);
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -85,7 +78,9 @@ function HomeTabScreen() {
           ),
         }}
         name="Chatroom"
-        component={isDoctor ? ChatroomForDoctor : Chatroom}
+        component={
+          userRole === "doctor" ? ListPatientMessageScreen : NewListDoctorScreen
+        }
       />
       <Tab.Screen
         options={{
@@ -101,8 +96,24 @@ function HomeTabScreen() {
     </Tab.Navigator>
   );
 }
+function ReportTabs() {
+  return (
+    <TopTab.Navigator>
+      <TopTab.Screen name="Chart" component={ReportChart} />
+      <TopTab.Screen name="History" component={ReportHistory} />
+    </TopTab.Navigator>
+  );
+}
+function PillTabs() {
+  return (
+    <TopTab.Navigator>
+      <TopTab.Screen name="Pill List" component={PillScreen} />
+      <TopTab.Screen name="Pill History" component={PillHistoryScreen} />
+    </TopTab.Navigator>
+  );
+}
 function Navigation() {
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.user);
   console.log("current state", state);
   return (
     <NavigationContainer>
@@ -131,17 +142,45 @@ function Navigation() {
           name="Pill"
           options={{
             headerStyle: {
-              backgroundColor: "#009DC7",
+              backgroundColor: "#1C6BA4",
             },
             headerTintColor: "#fff",
             headerTitleStyle: {
               fontWeight: "bold",
             },
           }}
-          component={PillScreen}
+          component={PillTabs}
         />
         <Stack.Screen
-          name="Report"
+          name="PrescriptionScreen"
+          options={{
+            title: "Prescription",
+            headerStyle: {
+              backgroundColor: "#1C6BA4",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+          component={PrescriptionScreen}
+        />
+        <Stack.Screen
+          name="NewPrescriptionScreen"
+          options={{
+            title: "Prescription",
+            headerStyle: {
+              backgroundColor: "#1C6BA4",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+          component={NewPrescriptionScreen}
+        />
+        <Stack.Screen
+          name="ReportTab"
           options={{
             headerStyle: {
               backgroundColor: "#009DC7",
@@ -150,8 +189,9 @@ function Navigation() {
             headerTitleStyle: {
               fontWeight: "bold",
             },
+            title: "REPORT",
           }}
-          component={ReportScreen}
+          component={ReportTabs}
         />
         <Stack.Screen
           name="Otp"
@@ -163,7 +203,19 @@ function Navigation() {
           component={OnBoardingScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen
+          options={{
+            headerStyle: {
+              backgroundColor: "#1C6BA4",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+          name="Chat"
+          component={Chat}
+        />
         <Stack.Screen
           name="EditProfile"
           component={EditProfileScreen}

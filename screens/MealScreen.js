@@ -117,62 +117,60 @@ const MealScreen = () => {
         </View>
         <View style={styles.scheduleFooterContainer}>
           <View style={{ flex: 1 }}>
-            <ScrollView
-              horizontal="true"
-              flexDirection="row"
-              contentContainerStyle={styles.calendarScrollView}
-            >
-              <TouchableHighlight {...touchProps} onPress={handleTouch}>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={styles.dateInMonth}>{currentDate}</Text>
-                  <Text style={styles.dateInWeek}>{currentDay}</Text>
-                </View>
-              </TouchableHighlight>
+            <ScrollView horizontal="true">
+              <View style={{ width: 2000, flexDirection: "row" }}>
+                <TouchableHighlight {...touchProps} onPress={handleTouch}>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={styles.dateInMonth}>{currentDate}</Text>
+                    <Text style={styles.dateInWeek}>{currentDay}</Text>
+                  </View>
+                </TouchableHighlight>
 
-              <TouchableHighlight {...touchProps} onPress={handleTouch1}>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={styles.dateInMonth}>{currentDate + 1}</Text>
-                  <Text style={styles.dateInWeek}>
-                    {weekday[currentDayinNumber + 1]}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+                <TouchableHighlight {...touchProps} onPress={handleTouch1}>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={styles.dateInMonth}>{currentDate + 1}</Text>
+                    <Text style={styles.dateInWeek}>
+                      {weekday[currentDayinNumber + 1]}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
 
-              <TouchableHighlight {...touchProps} onPress={handleTouch2}>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={styles.dateInMonth}>{currentDate + 2}</Text>
-                  <Text style={styles.dateInWeek}>
-                    {weekday[currentDayinNumber + 2]}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+                <TouchableHighlight {...touchProps} onPress={handleTouch2}>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={styles.dateInMonth}>{currentDate + 2}</Text>
+                    <Text style={styles.dateInWeek}>
+                      {weekday[currentDayinNumber + 2]}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
 
-              <TouchableHighlight {...touchProps} onPress={handleTouch3}>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={styles.dateInMonth}>{currentDate + 3}</Text>
-                  <Text style={styles.dateInWeek}>
-                    {weekday[currentDayinNumber + 3]}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+                <TouchableHighlight {...touchProps} onPress={handleTouch3}>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={styles.dateInMonth}>{currentDate + 3}</Text>
+                    <Text style={styles.dateInWeek}>
+                      {weekday[currentDayinNumber + 3]}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
 
-              <TouchableHighlight {...touchProps} onPress={handleTouch4}>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={styles.dateInMonth}>{currentDate + 4}</Text>
-                  <Text style={styles.dateInWeek}>
-                    {weekday[currentDayinNumber + 4]}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+                <TouchableHighlight {...touchProps} onPress={handleTouch4}>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={styles.dateInMonth}>{currentDate + 4}</Text>
+                    <Text style={styles.dateInWeek}>
+                      {weekday[currentDayinNumber + 4]}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
 
-              <TouchableHighlight {...touchProps}>
-                <View style={{ alignItems: "center" }}>
-                  <Text style={styles.dateInMonth}>{currentDate + 5}</Text>
-                  <Text style={styles.dateInWeek}>
-                    {weekday[currentDayinNumber + 5]}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+                <TouchableHighlight {...touchProps}>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={styles.dateInMonth}>{currentDate + 5}</Text>
+                    <Text style={styles.dateInWeek}>
+                      {weekday[currentDayinNumber + 5]}
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -304,10 +302,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     alignItems: "center",
     justifyContent: "center",
-  },
-  calendarScrollView: {
-    flex: 1,
-    flexDirection: "row",
   },
   dateContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
   dateInMonth: { fontSize: 20, fontWeight: "500", color: "#0E1012" },
